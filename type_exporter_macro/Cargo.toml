@@ -1,0 +1,15 @@
+[package]
+name = "type_exporter_macro"
+version = "0.1.0"
+edition = "2021"
+authors = ["Golden_Water"]
+license = "MIT"
+repository = "https://github.com/BillGoldenWater/TypeExporter.git"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1.0.56"
