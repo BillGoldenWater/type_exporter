@@ -41,7 +41,7 @@ impl TypeInfo {
   ) -> TEResult<TypeInfo> {
     // region imported
     let path_segment = match UsePath::<PathRs>::resolve_type_from_uses(uses, &type_path.path) {
-      Ok(path) => return Ok(TypeInfo::Normal(path.clone())),
+      Ok(path) => return Ok(TypeInfo::Normal(path)),
       Err(path_segment) => path_segment,
     };
     // endregion

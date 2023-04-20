@@ -39,7 +39,7 @@ impl TypeExporter {
 
     Ok(Self {
       root: src_dir.canonicalize()?,
-      compiler: TsCompiler::new(),
+      compiler: TsCompiler::default(),
       output: output.canonicalize()?,
       items: HashMap::new(),
     })

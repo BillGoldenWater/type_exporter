@@ -12,8 +12,8 @@ pub struct TsCompiler {
   globals: Globals,
 }
 
-impl TsCompiler {
-  pub fn new() -> Self {
+impl Default for TsCompiler {
+  fn default() -> Self {
     let source_map = SourceMap::new(FilePathMapping::new(vec![]));
     let source_map = Arc::new(source_map);
 
@@ -24,7 +24,9 @@ impl TsCompiler {
       globals: Globals::new(),
     }
   }
+}
 
+impl TsCompiler {
   pub fn compile(&self, content: Vec<ModuleItem>) -> String {
     let program = ast::Program::Module(ast::Module {
       span: Default::default(),

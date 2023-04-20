@@ -117,7 +117,7 @@ impl StructInfo {
     };
 
     let decl = create_type_alias_decl(
-      create_ident(&rename_name(&self.attr, None.into(), Some(&self.name)).unwrap()),
+      create_ident(rename_name(&self.attr, None, Some(&self.name)).unwrap()),
       type_ann,
     );
 

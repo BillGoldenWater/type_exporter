@@ -50,7 +50,7 @@ impl EnumInfo {
   }
 
   pub fn to_ts_ast(&self) -> TsAst<Vec<ast::ModuleItem>> {
-    let name = rename_name(&self.attr, None.into(), Some(&self.name)).unwrap();
+    let name = rename_name(&self.attr, None, Some(&self.name)).unwrap();
 
     let mut dependencies = HashSet::new();
     let mut variants = vec![];
@@ -152,12 +152,12 @@ impl VariantInfo {
 
     fn to_struct_ast(
       this: &VariantInfo,
-      name: &String,
+      name: &str,
       mut fields_prepend: Vec<FieldInfo>,
     ) -> TsAst<ast::ModuleItem> {
       fields_prepend.extend(this.fields.clone());
       StructInfo {
-        name: name.clone(),
+        name: name.to_string(),
         fields: fields_prepend,
         attr: AttributeInfo {
           rename: None.into(),
@@ -184,7 +184,7 @@ impl VariantInfo {
         let type_in_enum_define = create_type_lit(vec![
           create_property_type_element(
             create_expr_ident(tag),
-            type_to_type_ann(create_str_lit_type(name.clone())),
+            type_to_type_ann(create_str_lit_type(name)),
           ),
           create_property_type_element(
             create_expr_ident(content),

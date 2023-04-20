@@ -65,7 +65,7 @@ impl<T> AttributeInfoItem<T> {
     match self {
       Self::Unset => AttributeInfoItem::Unset,
       Self::SetEmpty => AttributeInfoItem::SetEmpty,
-      Self::Set(v) => AttributeInfoItem::Set(&v),
+      Self::Set(v) => AttributeInfoItem::Set(v),
     }
   }
 }
@@ -216,7 +216,7 @@ pub fn parse_attributes(attrs: &[Attribute]) -> TEResult<AttributeInfo> {
 
             if key.eq("rename_all") {
               if let Some(ref value) = value {
-                let rename_all = RenameAll::from_str(&value)
+                let rename_all = RenameAll::from_str(value)
                   .map_err(|_| TEError::UnknownValueOfRenameAll(value.clone()))?;
 
                 result.rename_all = AttributeInfoItem::Set(rename_all);
