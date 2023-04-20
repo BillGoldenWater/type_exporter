@@ -1,4 +1,3 @@
-use std::fs;
 use std::path::PathBuf;
 
 use type_exporter::type_exporter::TypeExporter;
@@ -6,11 +5,18 @@ use type_exporter::type_exporter::TypeExporter;
 fn main() {
   let _ = env_logger::try_init();
 
-  let output = PathBuf::from("./testExport");
+  let args: Args = argh::from_env();
 
-  fs::create_dir_all(&output).expect("failed to create output dir");
-  fs::remove_dir_all(&output).expect("failed to delete last output");
-  fs::create_dir_all(&output).expect("failed to create output dir");
+  TypeExporter::run(PathBuf::from(args.input), PathBuf::from(args.output)).expect("failed to run");
+}
 
-  TypeExporter::run(PathBuf::from("../ChaosDanmuTool/backend"), output).expect("failed to run");
+#[derive(argh::FromArgs)]
+#[argh(description = "a tool for generate typescript definition from rust")]
+struct Args {
+  /// path to input cargo project
+  #[argh(option, short = 'i')]
+  input: String,
+  /// path to output
+  #[argh(option, short = 'o')]
+  output: String,
 }

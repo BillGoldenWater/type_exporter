@@ -20,6 +20,7 @@ syn = { version = "2.0.14", features = ["full", "extra-traits"] }
 thiserror = "1.0.40"
 type_exporter_macro = { version = "0.1.0", path = "type_exporter_macro" }
 walkdir = "2.3.3"
+argh = "0.1.10"
 
 [workspace]
 members = ["type_exporter_macro"]
