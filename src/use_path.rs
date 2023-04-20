@@ -75,8 +75,8 @@ impl UsePath<PathRs> {
     self
   }
 
-  pub fn with_actual_name(mut self, name: String) -> Self {
-    self.actual_name = Some(name);
+  pub fn with_actual_name(mut self, name: Option<String>) -> Self {
+    self.actual_name = name;
     self
   }
 
@@ -93,24 +93,33 @@ impl UsePath<PathRs> {
     expand_use_tree_(&UsePath::default(), &item_use.tree)
   }
 
-  pub fn resolve_type_from_uses<'u, 'p>(
-    uses: &'u [UsePath<PathRs>],
+  pub fn resolve_type_from_uses<'p>(
+    uses: &[UsePath<PathRs>],
     path: &'p syn::Path,
-  ) -> Result<&'u UsePath<PathRs>, &'p PathSegment> {
+  ) -> Result<UsePath<PathRs>, &'p PathSegment> {
     let path_first = path
       .segments
       .first()
       .expect("unexpected empty path")
       .ident
       .to_string();
+    let path_last = path.segments.last().expect("unexpected empty path");
 
     let import_item = uses.iter().find(|it| it.name.eq(&path_first));
 
-    if let Some(item) = import_item {
-      // todo
-      Ok(item)
+    if let Some(mut item) = import_item.cloned() {
+      item.path.extend(
+        path
+          .segments
+          .iter()
+          .rev()
+          .skip(1)
+          .rev()
+          .map(|it| UsePathComponent::Normal(it.ident.to_string())),
+      );
+      Ok(item.with_name(path_last.ident.to_string()))
     } else {
-      Err(path.segments.last().expect("unexpected empty path"))
+      Err(path_last)
     }
   }
 
@@ -304,7 +313,7 @@ fn expand_use_tree_(prefix: &UsePath<PathRs>, use_tree: &UseTree) -> Vec<UsePath
       vec![prefix
         .clone()
         .with_name(use_rename.rename.to_string())
-        .with_actual_name(use_rename.ident.to_string())]
+        .with_actual_name(Some(use_rename.ident.to_string()))]
     }
     UseTree::Glob(_) => {
       warn!("detected a use statement with *, this is unsupported, any type imported by this will be ignored");
