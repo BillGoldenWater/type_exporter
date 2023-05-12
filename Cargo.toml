@@ -13,9 +13,9 @@ env_logger = "0.10.0"
 heck = { version = "0.4.1", features = ["unicode", "unicode-segmentation"] }
 itertools = "0.10.5"
 log = "0.4.17"
-swc = "0.260.22"
-swc_common = "0.31.4"
-swc_core = { version = "0.75.22", features = ["ecma_ast"] }
+swc = { version = "=0.251.0", features = [] }
+swc_common = "=0.29.35"
+swc_core = { version = "=0.65.0", features = ["ecma_ast"] }
 syn = { version = "2.0.14", features = ["full", "extra-traits"] }
 thiserror = "1.0.40"
 type_exporter_macro = { version = "0.1.0", path = "type_exporter_macro" }
