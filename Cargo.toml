@@ -11,7 +11,7 @@ repository = "https://github.com/BillGoldenWater/type_exporter.git"
 [dependencies]
 env_logger = "0.10.0"
 heck = { version = "0.4.1", features = ["unicode", "unicode-segmentation"] }
-itertools = "0.10.5"
+itertools = "0.11.0"
 log = "0.4.17"
 swc = { version = "=0.251.0", features = [] }
 swc_common = "=0.29.35"
