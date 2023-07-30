@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+#[derive(Debug)]
 pub struct Package {
   pub name: String,
   pub root: PathBuf,
