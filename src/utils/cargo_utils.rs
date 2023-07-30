@@ -11,7 +11,9 @@ pub fn cargo_metadata(dir: impl AsRef<Path>) -> LoadManifestResult<Metadata> {
     .output()?;
 
   if !output.status.success() {
-    return Err(LoadManifestError::CargoMetadataFailed(String::from_utf8_lossy(&output.stderr).to_string()))
+    return Err(LoadManifestError::CargoMetadataFailed(
+      String::from_utf8_lossy(&output.stderr).to_string(),
+    ));
   }
 
   serde_json::from_str(String::from_utf8_lossy(&output.stdout).as_ref()).map_err(Into::into)
