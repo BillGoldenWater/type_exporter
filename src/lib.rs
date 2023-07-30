@@ -8,7 +8,7 @@ use log::info;
 use crate::config::Config;
 use crate::error::process_manifest::ProcessManifestError;
 use crate::error::TEResult;
-use crate::package::Package;
+use crate::package::package_info::PackageInfo;
 use crate::utils::cargo_utils::cargo_metadata;
 
 pub mod cargo;
@@ -34,19 +34,19 @@ impl TypeExporter {
   }
 
   pub fn export(&self) -> TEResult<()> {
-    let package = self.process_manifest()?;
+    let package_info = self.process_manifest()?;
 
     info!(
       "found target(s) {entries:?} in {name}({root:?})",
-      entries = package.entries,
-      name = package.name,
-      root = package.root
+      entries = package_info.entries,
+      name = package_info.name,
+      root = package_info.root
     );
 
     Ok(())
   }
 
-  fn process_manifest(&self) -> TEResult<Package> {
+  fn process_manifest(&self) -> TEResult<PackageInfo> {
     let metadata = cargo_metadata(&self.input)?;
 
     let available_packages = || {
@@ -101,6 +101,6 @@ impl TypeExporter {
       })
       .collect();
 
-    Ok(Package::new(package.name, root, entries))
+    Ok(PackageInfo::new(package.name, root, entries))
   }
 }
