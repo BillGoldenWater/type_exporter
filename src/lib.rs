@@ -3,8 +3,8 @@
 use std::path::PathBuf;
 
 use crate::config::Config;
-use crate::error::initialize::InitializeResult;
 use crate::error::TEResult;
+use crate::utils::cargo_utils::cargo_metadata;
 
 pub mod cargo;
 pub mod config;
@@ -19,25 +19,17 @@ pub struct TypeExporter {
 }
 
 impl TypeExporter {
-  pub fn new(
-    input_path: PathBuf,
-    output_path: PathBuf,
-    config_path: Option<PathBuf>,
-  ) -> InitializeResult<Self> {
-    let config = config_path
-      .map(std::fs::read_to_string)
-      .transpose()?
-      .map(|config_str| toml::from_str::<Config>(&config_str))
-      .transpose()?;
-
-    Ok(Self {
+  pub fn new(input_path: PathBuf, output_path: PathBuf, config: Config) -> Self {
+    Self {
       input: input_path,
       output: output_path,
-      config: config.unwrap_or_default(),
-    })
+      config,
+    }
   }
 
-  pub fn export(&mut self) -> TEResult<()> {
+  pub fn export(&self) -> TEResult<()> {
+    let metadata = cargo_metadata(&self.input)?;
+
     Ok(())
   }
 }
