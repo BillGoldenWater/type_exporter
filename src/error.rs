@@ -1,10 +1,11 @@
-pub mod load_manifest;
+use crate::cargo::metadata::error::LoadMetadataError;
+
 pub mod process_manifest;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-  #[error("failed to load manifest: {0}")]
-  LoadManifest(#[from] load_manifest::LoadManifestError),
+  #[error("failed to load metadata: {0}")]
+  LoadMetadata(#[from] LoadMetadataError),
   #[error("failed to process manifest: {0}")]
   ProcessManifest(#[from] process_manifest::ProcessManifestError),
 }

@@ -2,6 +2,7 @@
 
 use std::path::PathBuf;
 
+use crate::cargo::metadata::Metadata;
 use itertools::Itertools;
 use log::info;
 
@@ -9,13 +10,11 @@ use crate::config::Config;
 use crate::error::process_manifest::ProcessManifestError;
 use crate::error::TEResult;
 use crate::package::package_info::PackageInfo;
-use crate::utils::cargo_utils::cargo_metadata;
 
 pub mod cargo;
 pub mod config;
 pub mod error;
 pub mod package;
-pub mod utils;
 
 #[derive(Debug)]
 pub struct TypeExporter {
@@ -47,7 +46,7 @@ impl TypeExporter {
   }
 
   fn process_manifest(&self) -> TEResult<PackageInfo> {
-    let metadata = cargo_metadata(&self.input)?;
+    let metadata = Metadata::from_dir(&self.input)?;
 
     let available_packages = || {
       metadata

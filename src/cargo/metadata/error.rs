@@ -1,7 +1,7 @@
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-pub enum LoadManifestError {
+pub enum LoadMetadataError {
   #[error("failed to get metadata: {0}")]
   Get(#[from] std::io::Error),
   #[error("cargo metadata exited with non zero status code, stderr: \n{0}")]
@@ -10,4 +10,4 @@ pub enum LoadManifestError {
   Parse(#[from] serde_json::Error),
 }
 
-pub type LoadManifestResult<T> = Result<T, LoadManifestError>;
+pub type LoadMetadataResult<T> = Result<T, LoadMetadataError>;
