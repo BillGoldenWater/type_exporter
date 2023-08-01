@@ -2,12 +2,12 @@
 
 use std::path::PathBuf;
 
-use crate::cargo::metadata::Metadata;
 use itertools::Itertools;
 use log::info;
 
+use crate::cargo::metadata::Metadata;
 use crate::config::Config;
-use crate::error::process_manifest::ProcessManifestError;
+use crate::error::load_package_info::{LoadPackageInfoError, LoadPackageInfoResult};
 use crate::error::TEResult;
 use crate::package::package_info::PackageInfo;
 
@@ -33,7 +33,7 @@ impl TypeExporter {
   }
 
   pub fn export(&self) -> TEResult<()> {
-    let package_info = self.process_manifest()?;
+    let package_info = self.load_package_info()?;
 
     info!(
       "found target(s) {entries:?} in {name}({root:?})",
@@ -45,7 +45,7 @@ impl TypeExporter {
     Ok(())
   }
 
-  fn process_manifest(&self) -> TEResult<PackageInfo> {
+  fn load_package_info(&self) -> LoadPackageInfoResult<PackageInfo> {
     let metadata = Metadata::from_dir(&self.input)?;
 
     let available_packages = || {
@@ -58,7 +58,7 @@ impl TypeExporter {
     };
 
     if metadata.packages.is_empty() {
-      return Err(ProcessManifestError::NoPackage.into());
+      return Err(LoadPackageInfoError::NoPackage);
     }
 
     let package = if let Some(package_name) = &self.config.package_name {
@@ -68,15 +68,14 @@ impl TypeExporter {
         package.clone()
       } else {
         return Err(
-          ProcessManifestError::UnknownPackage {
+          LoadPackageInfoError::UnknownPackage {
             specified: package_name.clone(),
             available: available_packages(),
-          }
-          .into(),
+          },
         );
       }
     } else if metadata.packages.len() > 1 {
-      return Err(ProcessManifestError::MultiPackage(available_packages()).into());
+      return Err(LoadPackageInfoError::MultiPackage(available_packages()));
     } else {
       metadata.packages[0].clone()
     };

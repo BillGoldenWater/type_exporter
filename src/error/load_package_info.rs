@@ -1,5 +1,9 @@
+use crate::cargo::metadata::error::LoadMetadataError;
+
 #[derive(Debug, thiserror::Error)]
-pub enum ProcessManifestError {
+pub enum LoadPackageInfoError {
+  #[error("failed to load metadata: {0}")]
+  LoadMetadata(#[from] LoadMetadataError),
   #[error("no package in the input path")]
   NoPackage,
   #[error(
@@ -13,4 +17,4 @@ pub enum ProcessManifestError {
   },
 }
 
-pub type ProcessManifestResult<T> = Result<T, ProcessManifestError>;
+pub type LoadPackageInfoResult<T> = Result<T, LoadPackageInfoError>;

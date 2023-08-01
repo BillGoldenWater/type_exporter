@@ -1,13 +1,9 @@
-use crate::cargo::metadata::error::LoadMetadataError;
-
-pub mod process_manifest;
+pub mod load_package_info;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-  #[error("failed to load metadata: {0}")]
-  LoadMetadata(#[from] LoadMetadataError),
-  #[error("failed to process manifest: {0}")]
-  ProcessManifest(#[from] process_manifest::ProcessManifestError),
+  #[error("failed to load package info: {0}")]
+  LoadPackageInfo(#[from] load_package_info::LoadPackageInfoError),
 }
 
 pub type TEResult<T> = Result<T, Error>;
