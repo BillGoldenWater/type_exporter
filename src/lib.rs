@@ -67,12 +67,10 @@ impl TypeExporter {
       if let Some(package) = package {
         package.clone()
       } else {
-        return Err(
-          LoadPackageInfoError::UnknownPackage {
-            specified: package_name.clone(),
-            available: available_packages(),
-          },
-        );
+        return Err(LoadPackageInfoError::UnknownPackage {
+          specified: package_name.clone(),
+          available: available_packages(),
+        });
       }
     } else if metadata.packages.len() > 1 {
       return Err(LoadPackageInfoError::MultiPackage(available_packages()));
