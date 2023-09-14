@@ -1,18 +1,15 @@
 use std::path::PathBuf;
+use std::rc::Rc;
 
 #[derive(Debug)]
 pub struct PackageInfo {
-  pub name: String,
+  pub name: Rc<str>,
   pub root: PathBuf,
-  pub entries: Vec<PathBuf>,
+  pub entry: PathBuf,
 }
 
 impl PackageInfo {
-  pub fn new(name: String, root: PathBuf, entries: Vec<PathBuf>) -> Self {
-    Self {
-      name,
-      root,
-      entries,
-    }
+  pub fn new(name: Rc<str>, root: PathBuf, entry: PathBuf) -> Self {
+    Self { name, root, entry }
   }
 }

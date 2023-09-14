@@ -1,6 +1,7 @@
 #![warn(missing_debug_implementations)]
 
 use std::path::PathBuf;
+use std::rc::Rc;
 
 use itertools::Itertools;
 use log::info;
@@ -36,8 +37,8 @@ impl TypeExporter {
     let package_info = self.load_package_info()?;
 
     info!(
-      "found target(s) {entries:?} in {name}({root:?})",
-      entries = package_info.entries,
+      "target {entry:?} found, in {name}({root:?})",
+      entry = package_info.entry,
       name = package_info.name,
       root = package_info.root
     );
@@ -95,8 +96,14 @@ impl TypeExporter {
           .expect("expect inside src folder")
           .to_path_buf()
       })
-      .collect();
+      .collect_vec();
 
-    Ok(PackageInfo::new(package.name, root, entries))
+    let entry = entries
+      .iter()
+      .find(|it| it.ends_with("lib.rs"))
+      .unwrap_or(&entries[0])
+      .clone();
+
+    Ok(PackageInfo::new(Rc::from(package.name), root, entry))
   }
 }
